@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        .completed {
+            text-decoration: line-through;
+        }
+
+        .button {
+            width: 180px;
+            height: 45px;
+            background-color: #444444;
+            color: #FFFFFF;
+            border: solid;
+            border-radius: 5px;
+        }
+
+        .input-container {
+            text-align: center;
+        }
+
+        .input-text {
+            height: 33px;
+            width: 180px;
+            border-radius: 5px;
+            border: 1px solid black;
+        }
+    </style>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        function App() {
+            const [todos, setTodos] = useState([]);
+            const [input, setInput] = useState('');
+            const [currentTime, setCurrentTime] = useState(new Date());
+
+            const addTodo = () => {
+                if (input) {
+                    setTodos([...todos, { text: input, completed: false }]);
+                    setInput('');
+                }
+            };
+
+            const toggleTodo = (index) => {
+                const newTodos = [...todos];
+                newTodos[index].completed = !newTodos[index].completed;
+                setTodos(newTodos);
+            };
+
+            const deleteTodo = (index) => {
+                const newTodos = [...todos];
+                newTodos.splice(index, 1);
+                setTodos(newTodos);
+            };
+
+            setInterval(() => {
+                setCurrentTime(new Date());
+            }, 1000);
+
+            return (
+                <>
+                    <header style={{ backgroundColor: '#f6f1eb', color: '#222222', textAlign: 'center', height: '10em' }}>
+                        <h1>My TO-DO-LIST</h1>
+                        <h3>🤓오늘의 할 일🤓</h3>
+                        <p>현재 시간 : {currentTime.toLocaleDateString()} {currentTime.toLocaleTimeString()}</p>
+                    </header>
+                    <main>
+                        <div className="input-container">
+                            <input
+                                type="text"
+                                placeholder="할 일을 입력해주세요."
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                className="input-text"
+                            />
+                            <button onClick={addTodo} className="button">추가</button>
+                        </div>
+                        <ol>
+                            {todos.map((todo, index) => (
+                                <li key={index} className={todo.completed ? 'completed' : ''}>
+                                    <input type="checkbox" checked={todo.completed} onChange={() => toggleTodo(index)} />
+                                    <span className={todo.completed ? 'completed' : ''}>{todo.text}</span>
+                                    <button onClick={() => deleteTodo(index)} className="button">삭제</button>
+                                </li>
+                            ))}
+                        </ol>
+                    </main>
+                    <footer style={{ textAlign: 'center', backgroundColor: '#f6f1eb', color: '#222222', height: '5em' }}>
+                        <p style={{ margin: '10px' }}>&copy; 2023 minbumKIM</p>
+                    </footer>
+                </>
+            )
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+
+</html>
